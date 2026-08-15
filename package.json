@@ -1,0 +1,17 @@
+{
+  "name": "little-paint-and-wonder",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "shadow-cljs watch app",
+    "build": "shadow-cljs release app",
+    "clean": "shadow-cljs clean"
+  },
+  "devDependencies": {
+    "shadow-cljs": "3.4.11"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}

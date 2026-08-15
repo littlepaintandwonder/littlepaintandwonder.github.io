@@ -1,0 +1,2 @@
+/* Re-apply inherited colour tokens at the application boundary after a theme switch. */
+.app { color: var(--ink); background: var(--cream); }
