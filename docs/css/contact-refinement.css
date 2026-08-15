@@ -1,0 +1,15 @@
+/* Contact form, headline face, and unblended hero artwork. */
+.hero h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; letter-spacing: -1.8px; }
+.hero-art { background: transparent; }
+.hero-art img { border-radius: 0; filter: none; mix-blend-mode: normal; }
+.contact { padding: 90px 0; background: var(--paper); }
+.contact-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 70px; align-items: center; }
+.contact h2 { font: 600 clamp(34px, 4.5vw, 54px)/1.1 'Fraunces', serif; letter-spacing: -1.5px; }
+.contact p { color: var(--muted); line-height: 1.65; font-size: 17px; }
+.contact-note { color: var(--moss) !important; font: 600 21px 'Patrick Hand', cursive !important; }
+.contact-form { display: grid; gap: 8px; padding: 30px; background: var(--cream); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); }
+.contact-form label { margin-top: 7px; font-size: 13px; font-weight: 700; }
+.contact-form input, .contact-form textarea { width: 100%; padding: 12px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 10px; resize: vertical; }
+.contact-form input:focus, .contact-form textarea:focus { outline: 3px solid color-mix(in srgb, var(--coral) 48%, transparent); border-color: var(--coral); }
+.contact-form .button { justify-self: start; margin-top: 10px; }
+@media (max-width: 760px) { .contact { padding: 65px 0; } .contact-grid { grid-template-columns: 1fr; } }

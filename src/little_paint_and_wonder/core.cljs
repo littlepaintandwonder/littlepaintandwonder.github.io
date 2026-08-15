@@ -25,8 +25,22 @@
      [:article [icon :shield] [:h3 "If paint gets in eyes"] [:p "Rinse thoroughly with clean water. If irritation continues or you are concerned, seek medical advice."]]
      [:article [icon :sun] [:h3 "Plaster dust"] [:p "Do not dry-sand plaster around children. Any sanding, cutting or finishing should be done by an adult."]]]]])
 (defn connect [] [:section.connect {:id "connect"} [:div.wrap.connect-grid [:div [:p.eyebrow "Let’s connect"] [:h2 "New creations, ideas and inspiration."] [:p "Follow along on Instagram for colourful little makes and updates as our online shop comes to life."] [:a.button.primary {:href instagram-url :target "_blank" :rel "noreferrer"} [icon :instagram] " @littlepaintandwonder"] [:p.coming "Online ordering is coming soon."]] [:a.qr-card {:href instagram-url :target "_blank" :rel "noreferrer" :aria-label "Open Little Paint and Wonder on Instagram"} [:img {:src "/assets/instagram-qr.png" :alt "QR code for Little Paint and Wonder Instagram"}] [:span "Scan to follow"]]]])
-(defn updates [] [:section.updates [:div.wrap.updates-inner [:div [:p.eyebrow "Get updates"] [:h2 "A little wonder in your inbox."] [:p "Be first to know when online ordering opens, plus get gentle creative prompts and studio notes."]] [:form.subscribe {:on-submit (fn [e] (.preventDefault e) (swap! app-state assoc :sent? true))} [:label.sr-only {:for "email"} "Email address"] [:input {:id "email" :type "email" :required true :placeholder "Your email address"}] [:button.button.primary {:type "submit"} (if (:sent? @app-state) "You’re on the list!" "Get updates")]]]])
+(defn contact []
+  [:section.contact
+   [:div.wrap.contact-grid
+    [:div [:p.eyebrow "Contact us"] [:h2 "Have a question or an idea?"] [:p "We would love to hear from you — whether you are asking about a kit, a bulk order, or simply want to say hello."] [:p.contact-note "Online ordering is coming soon. For now, send us an enquiry and we’ll be in touch."]]
+    [:form.contact-form {:on-submit (fn [e]
+                                      (.preventDefault e)
+                                      (let [form (.-currentTarget e) data (js/FormData. form)
+                                            subject (js/encodeURIComponent (str "Little Paint & Wonder enquiry — " (.get data "name")))
+                                            body (js/encodeURIComponent (str "Name: " (.get data "name") "\nEmail: " (.get data "email") "\n\nEnquiry:\n" (.get data "message")))]
+                                        (swap! app-state assoc :sent? true)
+                                        (set! (.-href js/location) (str "mailto:?subject=" subject "&body=" body))))}
+     [:label {:for "contact-name"} "Name"] [:input {:id "contact-name" :name "name" :required true :autocomplete "name"}]
+     [:label {:for "contact-email"} "Email"] [:input {:id "contact-email" :name "email" :type "email" :required true :autocomplete "email"}]
+     [:label {:for "contact-message"} "How can we help?"] [:textarea {:id "contact-message" :name "message" :required true :rows 4}]
+     [:button.button.primary {:type "submit"} (if (:sent? @app-state) "Your email app is opening" "Send enquiry") [icon :arrow]]]]])
 (defn footer [] [:footer.site-footer [:div.wrap.footer-inner [brand] [:p "Little Paint & Wonder · Made with love in Australia"] [:a.footer-insta {:href instagram-url :target "_blank" :rel "noreferrer"} [icon :instagram] " Instagram"] [:button.back-top {:on-click #(.scrollTo js/window #js {:top 0 :behavior "smooth"})} [icon :up] " Back to top"]]])
-(defn page-content [] (case (:page @app-state) :home [:<> [hero] [story] [safety] [connect] [updates]] :safety [:<> [safety] [connect] [updates]] :connect [:<> [connect] [updates]]))
+(defn page-content [] (case (:page @app-state) :home [:<> [hero] [story] [safety] [connect] [contact]] :safety [:<> [safety] [connect] [contact]] :connect [:<> [connect] [contact]]))
 (defn app [] [:main {:class (str "app theme-" (:theme @app-state))} [header] [page-content] [footer] [:button.floating-top {:on-click #(.scrollTo js/window #js {:top 0 :behavior "smooth"}) :aria-label "Back to top"} [icon :up]]])
 (defn init [] (let [root (rdom/create-root (.getElementById js/document "app"))] (rdom/render root [app])))
