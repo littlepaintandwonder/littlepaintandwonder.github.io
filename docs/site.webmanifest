@@ -1,0 +1,17 @@
+{
+  "name": "Little Paint & Wonder",
+  "short_name": "Little Paint & Wonder",
+  "description": "Creative kits for little hands and big imaginations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcf6eb",
+  "theme_color": "#fcf6eb",
+  "icons": [
+    {
+      "src": "/assets/brand-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
