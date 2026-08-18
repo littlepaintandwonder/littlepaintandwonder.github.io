@@ -27,7 +27,7 @@
     [:div.pricing-grid [price-card "Colour Paint Strips" "6 paints" colour-paint-strips] [price-card "Pearl Paint Strips" "6 paints" pearl-paint-strips] [price-card "Mini Brushes" nil mini-brushes] [price-card "Colour Powder" "Available colours: red, yellow, pink, purple & blue · Age 3+" colour-powder]]
     [:div.pricing-note [:span "✦"] [:p [:strong "Party packs ready to take home"] " While stock lasts · Pre-orders welcome."]]
     [:div.pricing-safety [:h3 "Colour powder safety"] [:p "For external use only. Do not eat or intentionally inhale the powder. Avoid contact with eyes and keep away from the face and mouth. Use in a well-ventilated area. Wash hands after use. May stain clothing and surfaces. Keep powder dry and stored in a cool, dry place. Stop using if irritation occurs and wash the affected area with clean water."]]]])
-(def gallery-items [{:src "/assets/premium-paint-your-own-kits.jpg" :alt "Premium paint-your-own kits from Little Paint & Wonder" :title "Premium Paint-Your-Own Kits" :description "Three colourful paint-your-own craft sets: Bee & Honey Adventure, Wild West Cowboy Roundup and Fairy Tale Princess Magic.")}])
+(def gallery-items [{:src "/assets/premium-paint-your-own-kits.jpg" :alt "Premium paint-your-own kits from Little Paint & Wonder" :title "Premium Paint-Your-Own Kits" :description "Three colourful paint-your-own craft sets: Bee & Honey Adventure, Wild West Cowboy Roundup and Fairy Tale Princess Magic."}])
 (defn gallery []
   [:section.gallery-section {:id "gallery"}
    [:div.wrap
