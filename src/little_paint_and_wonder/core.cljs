@@ -47,17 +47,12 @@
         payload (clj->js {:name (.get data "name")
                           :email (.get data "email")
                           :enquiry (.get data "message")})]
-    (swap! app-state assoc :sending? true :error? false)
+    (swap! app-state assoc :sent? true :sending? false :error? false)
     (-> (js/fetch email-api-url
                   #js {:method "POST"
                        :headers #js {"Content-Type" "application/json"}
                        :body (js/JSON.stringify payload)})
-        (.then (fn [response]
-                 (if (.-ok response)
-                   (swap! app-state assoc :sent? true :sending? false)
-                   (throw (js/Error. "Unable to send enquiry")))))
-        (.catch (fn [_]
-                  (swap! app-state assoc :sending? false :error? true))))))
+        (.catch (fn [_] nil)))))
 (defn contact []
   [:section.contact
    [:div.wrap.contact-grid
@@ -69,11 +64,8 @@
      [:input {:id "contact-email" :name "email" :type "email" :required true :autocomplete "email"}]
      [:label {:for "contact-message"} "How can we help?"]
      [:textarea {:id "contact-message" :name "message" :required true :rows 4}]
-     [:button.button.primary {:type "submit" :disabled (or (:sending? @app-state) (:sent? @app-state))}
-      (cond (:sent? @app-state) "Enquiry sent"
-            (:sending? @app-state) "Sending…"
-            (:error? @app-state) "Try again"
-            :else "Send enquiry")
+     [:button.button.primary {:type "submit" :disabled (:sent? @app-state)}
+      (if (:sent? @app-state) "Enquiry sent" "Send enquiry")
       [icon :arrow]]]]])
 (defn footer [] [:footer.site-footer [:div.wrap.footer-inner [brand] [:p "Little Paint & Wonder · Made with love in Australia"] [:a.footer-insta {:href instagram-url :target "_blank" :rel "noreferrer"} [icon :instagram] " Instagram"] [:button.back-top {:on-click #(.scrollTo js/window #js {:top 0 :behavior "smooth"})} [icon :up] " Back to top"]]])
 (defn page-content [] (case (:page @app-state) :home [:<> [hero] [story] [pricing] [gallery] [safety] [connect] [contact]] :pricing [:<> [pricing] [gallery] [contact]] :gallery [:<> [gallery] [pricing] [contact]] :safety [:<> [safety] [connect] [contact]] :connect [:<> [connect] [contact]]))
