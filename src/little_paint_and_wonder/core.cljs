@@ -30,43 +30,31 @@
     [:div.pricing-note [:span "✦"] [:p [:strong "Party packs ready to take home"] " While stock lasts · Pre-orders welcome."]]
     [:div.pricing-safety [:h3 "Colour powder safety"] [:p "For external use only. Do not eat or intentionally inhale the powder. Avoid contact with eyes and keep away from the face and mouth. Use in a well-ventilated area. Wash hands after use. May stain clothing and surfaces. Keep powder dry and stored in a cool, dry place. Stop using if irritation occurs and wash the affected area with clean water."]]]])
 (def gallery-items [{:src "/assets/premium-paint-your-own-kits.jpg" :alt "Premium paint-your-own kits from Little Paint & Wonder" :title "Premium Paint-Your-Own Kits" :description "Three colourful paint-your-own craft sets: Bee & Honey Adventure, Wild West Cowboy Roundup and Fairy Tale Princess Magic."}])
-(defn gallery []
-  [:section.gallery-section {:id "gallery"}
-   [:div.wrap
-    [:div.section-heading.gallery-heading [:p.eyebrow "Gallery"] [:h2 "A peek at what’s inside."] [:p "Explore our paint-your-own kits and the colourful little creations they inspire."]]
-    [:div.gallery-grid
-     (for [{:keys [src alt title description]} gallery-items]
-       ^{:key src}
-       [:figure.gallery-card [:img {:src src :alt alt :width 896 :height 1196 :loading "lazy" :decoding "async"}] [:figcaption [:h3 title] [:p description]]])]]])
+(defn gallery [] [:section.gallery-section {:id "gallery"} [:div.wrap [:div.section-heading.gallery-heading [:p.eyebrow "Gallery"] [:h2 "A peek at what’s inside."] [:p "Explore our paint-your-own kits and the colourful little creations they inspire."]] [:div.gallery-grid (for [{:keys [src alt title description]} gallery-items] ^{:key src} [:figure.gallery-card [:img {:src src :alt alt :width 896 :height 1196 :loading "lazy" :decoding "async"}] [:figcaption [:h3 title] [:p description]]])]]])
 (def paints [{:title "Washable poster paint" :note "ED Art Supplies" :copy "Water-based, washable poster paint for artful afternoons."} {:title "Gyprock casting plaster" :note "Materials" :copy "Used to make decorative plaster creations that dry into special keepsakes."}])
 (def safety-points ["Recommended for ages 3+ with adult supervision." "This is a craft activity — not intended as a toy." "Do not eat or place plaster or paint in the mouth." "Small pieces may present a choking hazard." "Plaster may break if dropped — handle with care." "Use paint as directed and keep away from eyes and mouth." "Allow your creation to dry completely before handling or displaying." "Please retain this information for future reference."])
 (defn safety [] [:section.content-section.safety {:id "safety"} [:div.wrap [:div.section-heading [:p.eyebrow "Safety & care"] [:h2 "The grown-up corner"] [:p "A few simple notes help all the creative fun stay happy, safe and easy. Materials, paint and plaster guidance are all gathered here for future reference."]] [:div.materials-grid [:article.material-card [:div.material-icon "✦"] [:p.label "Materials"] [:h3 "What’s inside"] [:ul (for [{:keys [title note copy]} paints] ^{:key title} [:li [:strong title] [:span note] [:p copy]])]] [:article.safety-card [:div.card-icon [icon :shield]] [:h3 "Safety & care"] [:ul (for [point safety-points] ^{:key point} [:li point])]]] [:div.first-aid [:article [icon :heart] [:h3 "Painting care"] [:p "Wash hands after painting. Protect clothing and surfaces from paint, and keep containers closed when not in use."]] [:article [icon :shield] [:h3 "If paint gets in eyes"] [:p "Rinse thoroughly with clean water. If irritation continues or you are concerned, seek medical advice."]] [:article [icon :sun] [:h3 "Plaster dust"] [:p "Do not dry-sand plaster around children. Any sanding, cutting or finishing should be done by an adult."]]]]])
 (defn connect [] [:section.connect {:id "connect"} [:div.wrap.connect-grid [:div [:p.eyebrow "Let’s connect"] [:h2 "New creations, ideas and inspiration."] [:p "Follow along on Instagram for colourful little makes and updates as our online shop comes to life."] [:a.button.primary {:href instagram-url :target "_blank" :rel "noreferrer"} [icon :instagram] " @littlepaintandwonder"] [:p.coming "Online ordering is coming soon."]] [:a.qr-card {:href instagram-url :target "_blank" :rel "noreferrer" :aria-label "Open Little Paint and Wonder on Instagram"} [:img {:src "/assets/instagram-qr.png" :alt "QR code for Little Paint and Wonder Instagram" :width 400 :height 400 :loading "lazy" :decoding "async"}] [:span "Scan to follow"]]]])
 (defn submit-contact! [form]
   (let [data (js/FormData. form)
-        payload (clj->js {:name (.get data "name")
-                          :email (.get data "email")
-                          :enquiry (.get data "message")})]
+        payload (clj->js {:name (.get data "name") :email (.get data "email") :enquiry (.get data "message")})]
     (swap! app-state assoc :sent? true :sending? false :error? false)
-    (-> (js/fetch email-api-url
-                  #js {:method "POST"
-                       :headers #js {"Content-Type" "application/json"}
-                       :body (js/JSON.stringify payload)})
+    (js/setTimeout
+     #(do
+        (.reset form)
+        (swap! app-state assoc :sent? false))
+     2500)
+    (-> (js/fetch email-api-url #js {:method "POST" :headers #js {"Content-Type" "application/json"} :body (js/JSON.stringify payload)})
         (.catch (fn [_] nil)))))
 (defn contact []
   [:section.contact
    [:div.wrap.contact-grid
     [:div [:p.eyebrow "Contact us"] [:h2 "Have a question or an idea?"] [:p "We would love to hear from you — whether you are asking about a kit, a bulk order, or simply want to say hello."] [:p.contact-note "Online ordering is coming soon. For now, send us an enquiry and we’ll be in touch."]]
     [:form.contact-form {:on-submit (fn [e] (.preventDefault e) (submit-contact! (.-currentTarget e)))}
-     [:label {:for "contact-name"} "Name"]
-     [:input {:id "contact-name" :name "name" :required true :autocomplete "name"}]
-     [:label {:for "contact-email"} "Email"]
-     [:input {:id "contact-email" :name "email" :type "email" :required true :autocomplete "email"}]
-     [:label {:for "contact-message"} "How can we help?"]
-     [:textarea {:id "contact-message" :name "message" :required true :rows 4}]
-     [:button.button.primary {:type "submit" :disabled (:sent? @app-state)}
-      (if (:sent? @app-state) "Enquiry sent" "Send enquiry")
-      [icon :arrow]]]]])
+     [:label {:for "contact-name"} "Name"] [:input {:id "contact-name" :name "name" :required true :autocomplete "name"}]
+     [:label {:for "contact-email"} "Email"] [:input {:id "contact-email" :name "email" :type "email" :required true :autocomplete "email"}]
+     [:label {:for "contact-message"} "How can we help?"] [:textarea {:id "contact-message" :name "message" :required true :rows 4}]
+     [:button.button.primary {:type "submit" :disabled (:sent? @app-state)} (if (:sent? @app-state) "Enquiry sent" "Send enquiry") [icon :arrow]]]]])
 (defn footer [] [:footer.site-footer [:div.wrap.footer-inner [brand] [:p "Little Paint & Wonder · Made with love in Australia"] [:a.footer-insta {:href instagram-url :target "_blank" :rel "noreferrer"} [icon :instagram] " Instagram"] [:button.back-top {:on-click #(.scrollTo js/window #js {:top 0 :behavior "smooth"})} [icon :up] " Back to top"]]])
 (defn page-content [] (case (:page @app-state) :home [:<> [hero] [story] [pricing] [gallery] [safety] [connect] [contact]] :pricing [:<> [pricing] [gallery] [contact]] :gallery [:<> [gallery] [pricing] [contact]] :safety [:<> [safety] [connect] [contact]] :connect [:<> [connect] [contact]]))
 (defn app [] [:main {:class (str "app theme-" (:theme @app-state))} [header] [page-content] [footer] [:button.floating-top {:on-click #(.scrollTo js/window #js {:top 0 :behavior "smooth"}) :aria-label "Back to top"} [icon :up]]])
