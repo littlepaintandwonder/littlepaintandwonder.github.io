@@ -30,7 +30,7 @@
                     {:src "/assets/mermaid-tale.jpeg" :alt "Mermaid tale plaster pieces" :title "Mermaid Tale" :description "Cake size mermaid tale."}])
 (defn change-gallery! [amount] (swap! app-state update :gallery-index #(mod (+ % amount) (count gallery-items))))
 (defn gallery []
-  (r/with-let [timer (js/setInterval #(change-gallery! 1) 2500)]
+  (r/with-let [timer (js/setInterval #(change-gallery! 1) 5000)]
     (let [index (:gallery-index @app-state)
           {:keys [src alt title description]} (nth gallery-items index)]
       [:section.gallery-section {:id "gallery"}
